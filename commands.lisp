@@ -38,3 +38,13 @@ if there were an empty string between them."
 (defcommand !whoami (source args)
   (declare (ignorable args))
   (format nil "~A" source))
+
+(defun safe-parse-integer (str &optional (default 0))
+  (let ((num (parse-integer str :junk-allowed t)))
+    (if (null num)
+	default
+	num)))
+
+(defcommand !sum (source args)
+  (declare (ignorable source))
+  (format nil "sum is ~A" (apply #'+ (mapcar #'safe-parse-integer (cdr args)))))
