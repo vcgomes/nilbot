@@ -1,3 +1,6 @@
+(defpackage #:nilbot-tests
+  (:use #:cl #:lisp-unit))
+
 (in-package :nilbot-tests)
 
 (define-test test-whoami

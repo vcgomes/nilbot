@@ -1,3 +1,7 @@
+(defpackage #:nilbot
+  (:use #:cl-irc #:cl)
+  (:export :handle-message))
+
 (in-package #:nilbot)
 
 (defvar *connection*)
