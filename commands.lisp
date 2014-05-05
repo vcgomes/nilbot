@@ -14,11 +14,11 @@
       (funcall sym source args))))
 
 (defun handle-message (source text)
-  (let ((split (split-by-one-space text)))
-    (let ((args (command-trim split)))
-      (if args
-	  (command-run source args)
-          ""))))
+  (let* ((split (split-by-one-space text))
+	 (args (command-trim split)))
+    (if args
+	(command-run source args)
+	"")))
 
 (defun split-by-one-space (string)
   (split-sequence:split-sequence #\Space string :remove-empty-subseqs t))
