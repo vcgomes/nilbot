@@ -21,14 +21,7 @@
           ""))))
 
 (defun split-by-one-space (string)
-  "Returns a list of substrings of string
-divided by ONE space each.
-Note: Two consecutive spaces will be seen as
-if there were an empty string between them."
-  (loop for i = 0 then (1+ j)
-     as j = (position #\Space string :start i)
-     collect (subseq string i j)
-     while j))
+  (split-sequence:split-sequence #\Space string :remove-empty-subseqs t))
 
 (defmacro defcommand (cmd args &rest body)
   (defvar *commands* (make-hash-table :test #'equal))

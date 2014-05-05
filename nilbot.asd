@@ -10,7 +10,8 @@
   :author "Vinicius Gomes <vcgomes@hostisdown.org>"
   :licence "MIT"
   :depends-on (:cl-irc
-	       :lisp-unit)
+	       :lisp-unit
+	       :split-sequence)
   :serial t
   :components ((:file "nilbot")
 	       (:file "commands")
