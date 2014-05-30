@@ -72,4 +72,4 @@
 
 (defcommand !oka (source args)
   (declare (ignorable source args))
-  "FIXME")
+  "valeu")
