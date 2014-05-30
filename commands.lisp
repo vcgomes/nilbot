@@ -36,8 +36,8 @@
 (defun safe-parse-integer (str &optional (default 0))
   (let ((num (parse-integer str :junk-allowed t)))
     (if (null num)
-	default
-	num)))
+        default
+        num)))
 
 (defcommand !sum (source args)
   (declare (ignorable source))
