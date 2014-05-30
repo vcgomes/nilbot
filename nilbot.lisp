@@ -43,7 +43,9 @@ irc-message-event on them. Returns background process ID if available."
 
 (defun start ()
   (setf *connection* (irc:connect :nickname *botname*
-                                  :server *server*))
+                                  :server *server*
+                                  :port *server-port*
+                                  :connection-security :ssl))
   (irc:add-hook *connection* 'irc-privmsg-message #'privmsg-hook)
   (irc:join *connection* *channel*)
   (setf *process* (start-background-handler *connection*)))
