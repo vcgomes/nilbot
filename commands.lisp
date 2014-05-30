@@ -42,3 +42,34 @@
 (defcommand !sum (source args)
   (declare (ignorable source))
   (format nil "sum is ~A" (apply #'+ (mapcar #'safe-parse-integer (cdr args)))))
+
+(defun get-day-of-week ()
+  (multiple-value-bind
+        (second minute hour date month year day daylight-p zone) (get-decoded-time)
+    day))
+
+(defun theme-at-s-u (day-of-week)
+  (case day-of-week
+    ((5 6) "closed?")
+    ((0 3) "no theme")
+    (1 "asian")
+    (2 "feijoada")
+    (4 "mexican")))
+
+(defcommand !s-u (source args)
+  (declare (ignorable source args))
+  (format nil "today theme at s-u is ~A" (theme-at-s-u (get-day-of-week))))
+
+(defcommand !dance (source args)
+  (declare (ignorable source args))
+  "<(*.*<) (^*.*^) (>*.*)>")
+
+(defcommand !help (source args)
+  (declare (ignorable source args))
+  (let ((acc nil))
+    (maphash #'(lambda (key value) (push (string-downcase key) acc)) *commands*)
+    (format nil "~{~A~^, ~}" acc)))
+
+(defcommand !oka (source args)
+  (declare (ignorable source args))
+  "FIXME")
