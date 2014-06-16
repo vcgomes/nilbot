@@ -10,6 +10,7 @@
   :author "Vinicius Gomes <vcgomes@hostisdown.org>"
   :licence "MIT"
   :depends-on (:cl-irc
+	       :cl+ssl
 	       :lisp-unit
 	       :split-sequence)
   :serial t
