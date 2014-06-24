@@ -73,3 +73,22 @@
 (defcommand !oka (source args)
   (declare (ignorable source args))
   "valeu")
+
+(defun get-result-from-team (team)
+  (cons (cdr (assoc :country team)) (cdr (assoc :goals team))))
+
+(defun get-matches-results (matches)
+  (let ((result nil))
+    (dolist (match matches result)
+      (let ((home (get-result-from-team (cdr (assoc :home--team match))))
+	    (away (get-result-from-team (cdr (assoc :away--team match)))))
+	(push (format nil "~A ~A x ~A ~A" (car home) (cdr home) (car away) (cdr away))
+	      result)))))
+
+(defun worldcup-today-to-json ()
+  (json:decode-json-from-string
+   (drakma:http-request "http://worldcup.sfg.io/matches/today")))
+
+(defcommand !worldcup (source args)
+  (declare (ignorable source args))
+    (format nil "today's results: ~{~A~^, ~}" (get-matches-results (worldcup-today-to-json))))

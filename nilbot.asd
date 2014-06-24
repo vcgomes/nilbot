@@ -12,7 +12,9 @@
   :depends-on (:cl-irc
 	       :cl+ssl
 	       :lisp-unit
-	       :split-sequence)
+	       :split-sequence
+	       :cl-json
+	       :drakma)
   :serial t
   :components ((:file "nilbot")
 	       (:file "commands")
