@@ -82,7 +82,7 @@
     (dolist (match matches result)
       (let ((home (get-result-from-team (cdr (assoc :home--team match))))
 	    (away (get-result-from-team (cdr (assoc :away--team match)))))
-	(push (format nil "~A ~A x ~A ~A" (car home) (cdr home) (car away) (cdr away))
+	(push (format nil "~A ~A x ~A ~A" (car home) (cdr home) (cdr away) (car away))
 	      result)))))
 
 (setq drakma:*header-stream* nil)
