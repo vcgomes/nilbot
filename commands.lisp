@@ -58,7 +58,7 @@
 
 (defcommand !s-u (source args)
   (declare (ignorable source args))
-  (format nil "today theme at s-u is ~A" (theme-at-s-u (get-day-of-week))))
+  (format nil "today's theme at s-u is ~A" (theme-at-s-u (get-day-of-week))))
 
 (defcommand !dance (source args)
   (declare (ignorable source args))
