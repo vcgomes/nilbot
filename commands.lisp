@@ -85,10 +85,6 @@
 	(push (format nil "~A ~A x ~A ~A" (car home) (cdr home) (cdr away) (car away))
 	      result)))))
 
-(setq drakma:*header-stream* nil)
-(setq drakma:*text-content-types* (cons '("application" . "json")
-                                        drakma:*text-content-types*))
-
 (defun worldcup-today-to-json ()
   (json:decode-json-from-string
    (drakma:http-request "http://worldcup.sfg.io/matches/today")))
