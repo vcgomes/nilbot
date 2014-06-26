@@ -51,9 +51,10 @@
 (defun theme-at-s-u (day-of-week)
   (case day-of-week
     ((5 6) "closed?")
-    ((0 3) "no theme")
-    (1 "asian")
+    (0 "no theme")
+    (1 "arabian")
     (2 "feijoada")
+    (3 "asian")
     (4 "mexican")))
 
 (defcommand !s-u (source args)
