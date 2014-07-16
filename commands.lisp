@@ -100,3 +100,15 @@
 (defcommand !copa (source args)
   (declare (ignorable source args))
   "tem bolo")
+
+(defun intc-string ()
+  (let ((result (drakma:http-request "http://finance.google.com/finance/info?client=ig\&q=INTC:NASDAQ")))
+    (subseq result 5 (- (length result) 2))))
+
+(defun intc-to-json ()
+  (json:decode-json-from-string (intc-string)))
+
+(defcommand !intc (source args)
+  (declare (ignorable source args))
+  (let ((json (intc-to-json)))
+    (format nil "NASDAQ:INTC ~A (~A)" (cdr (assoc :l--cur json)) (cdr (assoc :c json)))))
