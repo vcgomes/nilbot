@@ -1,5 +1,8 @@
 (in-package #:nilbot)
 
+(setf drakma:*header-stream* nil)
+(push '("application" . "json") drakma:*text-content-types*)
+
 (defun command-p (string)
   (and (stringp string) (eql (char string 0) #\!)))
 
