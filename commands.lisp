@@ -96,3 +96,7 @@
 (defcommand !worldcup (source args)
   (declare (ignorable source args))
     (format nil "today's results: ~{~A~^, ~}" (get-matches-results (worldcup-today-to-json))))
+
+(defcommand !copa (source args)
+  (declare (ignorable source args))
+  "tem bolo")
