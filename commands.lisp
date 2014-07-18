@@ -17,8 +17,14 @@
       (funcall sym source args)
       "")))
 
+(defun dirty-chars (c)
+  (case c
+    ((#\\ #\") t)
+    (otherwise nil)))
+
 (defun handle-message (source text)
-  (let* ((split (split-by-one-space text))
+  (let* ((clean-string (remove-if #'dirty-chars text))
+	 (split (split-by-one-space clean-string))
          (args (command-trim split)))
     (if args
         (command-run source args)
