@@ -3,6 +3,8 @@
 (setf drakma:*header-stream* nil)
 (push '("application" . "json") drakma:*text-content-types*)
 
+(defvar *commands* (make-hash-table :test #'equal))
+
 (defun command-p (string)
   (and (stringp string) (eql (char string 0) #\!)))
 
@@ -34,9 +36,9 @@
   (split-sequence:split-sequence #\Space string :remove-empty-subseqs t))
 
 (defmacro defcommand (cmd args &rest body)
-  (defvar *commands* (make-hash-table :test #'equal))
-  (setf (gethash (string cmd) *commands*) cmd)
-  `(defun ,cmd ,args ,@body))
+  `(progn
+     (setf (gethash (string ',cmd) *commands*) ',cmd)
+     (defun ,cmd ,args ,@body)))
 
 (defcommand !whoami (source args)
   (declare (ignorable args))
