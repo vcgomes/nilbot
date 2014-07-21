@@ -55,9 +55,7 @@
   (format nil "sum is ~A" (apply #'+ (mapcar #'safe-parse-integer (cdr args)))))
 
 (defun get-day-of-week ()
-  (multiple-value-bind
-        (second minute hour date month year day daylight-p zone) (get-decoded-time)
-    day))
+  (nth-value 6 (get-decoded-time)))
 
 (defun theme-at-s-u (day-of-week)
   (case day-of-week
@@ -79,7 +77,8 @@
 (defcommand !help (source args)
   (declare (ignorable source args))
   (let ((acc nil))
-    (maphash #'(lambda (key value) (push (string-downcase key) acc)) *commands*)
+    (loop for key being the hash-keys of *commands*
+       do (push key acc))
     (format nil "~{~A~^, ~}" acc)))
 
 (defcommand !oka (source args)
@@ -111,8 +110,7 @@
 
 (defun nasdaq-quote (code)
   (let ((request (format nil "http://finance.google.com/finance/info?client=ig\&q=~A:NASDAQ" code)))
-    (multiple-value-bind (body result-code)
-	(drakma:http-request request)
+    (let ((body (drakma:http-request request)))
       (if (= (length body) 0)
 	  nil
 	  (subseq body 5 (- (length body) 2))))))
