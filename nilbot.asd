@@ -14,7 +14,8 @@
 	       :lisp-unit
 	       :split-sequence
 	       :cl-json
-	       :drakma)
+	       :drakma
+	       :cl-csv)
   :serial t
   :components ((:file "nilbot")
 	       (:file "commands")

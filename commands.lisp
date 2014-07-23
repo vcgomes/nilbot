@@ -4,6 +4,7 @@
 (push '("application" . "json") drakma:*text-content-types*)
 
 (defvar *commands* (make-hash-table :test #'equal))
+(defvar *dictionary* nil)
 
 (defun command-p (string)
   (and (stringp string) (eql (char string 0) #\!)))
@@ -135,3 +136,34 @@
   (let ((code "INTC"))
     (multiple-value-bind (cur c) (results-from-quote (nasdaq-quote code))
       (format nil "NASDAQ:~A ~A (~A)" code cur c))))
+
+(defun load-dictionary ()
+  (setf *dictionary* (cl-csv:read-csv (open "dictionary.csv"))))
+
+(defun lookup-definition (str &optional (short t))
+  (if (null *dictionary*)
+      nil
+      (loop for elem in *dictionary* do
+	   (when (and (= (length elem) 3)
+		      (string-equal (string-upcase str) (string-upcase (first elem))))
+	     (return (if short
+			 (second elem)
+			 (third elem)))))))
+
+(defun print-definition (what short)
+  (let ((result (find-intel-definition what short)))
+    (if (null result)
+	(format nil "~A not found" what)
+	(format nil "~A: ~A" what result))))
+
+(defcommand !wtf (source args)
+  (declare (ignorable source))
+  (if (< (length args) 2)
+      "Usage: !wtf <string>"
+      (print-definition (second args) t)))
+
+(defcommand !whatis (source args)
+  (declare (ignorable source))
+  (if (< (length args) 2)
+      "Usage: !whatis <string>"
+      (print-definition (second args) nil)))
