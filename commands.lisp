@@ -109,8 +109,8 @@
   (declare (ignorable source args))
   "tem bolo")
 
-(defun nasdaq-quote (code)
-  (let ((request (format nil "http://finance.google.com/finance/info?client=ig\&q=~A:NASDAQ" code)))
+(defun stock-exchange-quote (secode code)
+  (let ((request (format nil "http://finance.google.com/finance/info?client=ig\&q=~A:~A" code secode)))
     (let ((body (drakma:http-request request)))
       (if (= (length body) 0)
 	  nil
@@ -120,22 +120,33 @@
   (let ((json (json:decode-json-from-string quote)))
     (values (cdr (assoc :l--cur json)) (cdr (assoc :c json)) (cdr (assoc :cp json)))))
 
+(defun stock-exchange (args secode)
+    (let* ((code (string-upcase (second args)))
+      (result (stock-exchange-quote secode code)))
+	(if (null result)
+            (format nil "Invalid ~A code (~A)" secode code)
+	    (multiple-value-bind (cur c cp) (results-from-quote (stock-exchange-quote secode code))
+	    (format nil "~A:~A ~A ~A (~A%)" secode code cur c cp)))))
+
+
 (defcommand !nasdaq (source args)
   (declare (ignorable source))
   (if (> (length args) 1)
-      (let* ((code (string-upcase (second args)))
-	     (result (nasdaq-quote code)))
-	(if (null result)
-	    (format nil "Invalid NASDAQ code (~A)" code)
-	    (multiple-value-bind (cur c cp) (results-from-quote (nasdaq-quote code))
-	      (format nil "NASDAQ:~A ~A ~A (~A%)" code cur c cp))))
+    (stock-exchange args "NASDAQ")
       "Usage: !nasdaq <code>"))
+
+(defcommand !bovespa (source args)
+  (declare (ignorable source))
+  (if (> (length args) 1)
+    (stock-exchange args "BVMF")
+      "Usage: !bovespa <code>"))
 
 (defcommand !intc (source args)
   (declare (ignorable source args))
-  (let ((code "INTC"))
-    (multiple-value-bind (cur c) (results-from-quote (nasdaq-quote code))
-      (format nil "NASDAQ:~A ~A (~A)" code cur c))))
+  (let ((code "INTC")
+        (secode "NASDAQ"))
+    (multiple-value-bind (cur c cp) (results-from-quote (stock-exchange-quote secode code))
+      (format nil "NASDAQ:~A ~A ~A (~A%)" code cur c cp))))
 
 (defun load-dictionary ()
   (setf *dictionary* (cl-csv:read-csv (open "dictionary.csv"))))
