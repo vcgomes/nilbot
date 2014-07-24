@@ -118,7 +118,7 @@
 
 (defun results-from-quote (quote)
   (let ((json (json:decode-json-from-string quote)))
-    (values (cdr (assoc :l--cur json)) (cdr (assoc :c json)))))
+    (values (cdr (assoc :l--cur json)) (cdr (assoc :c json)) (cdr (assoc :cp json)))))
 
 (defcommand !nasdaq (source args)
   (declare (ignorable source))
@@ -127,8 +127,8 @@
 	     (result (nasdaq-quote code)))
 	(if (null result)
 	    (format nil "Invalid NASDAQ code (~A)" code)
-	    (multiple-value-bind (cur c) (results-from-quote (nasdaq-quote code))
-	      (format nil "NASDAQ:~A ~A (~A)" code cur c))))
+	    (multiple-value-bind (cur c cp) (results-from-quote (nasdaq-quote code))
+	      (format nil "NASDAQ:~A ~A ~A (~A%)" code cur c cp))))
       "Usage: !nasdaq <code>"))
 
 (defcommand !intc (source args)
