@@ -167,3 +167,13 @@
   (if (< (length args) 2)
       "Usage: !whatis <string>"
       (print-definition (second args) nil)))
+
+(defun fortune-to-string ()
+  (let* ((buf (make-string 512))
+	 (end (read-sequence buf (sb-ext:process-output
+				  (sb-ext:run-program "/usr/bin/fortune" '("-a" "-s") :output :stream)))))
+    (subseq buf 0 (- end 1))))
+
+(defcommand !fortune (source args)
+  (declare (ignorable source args))
+  (fortune-to-string))
