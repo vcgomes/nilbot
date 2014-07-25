@@ -10,13 +10,13 @@
   :author "Vinicius Gomes <vcgomes@hostisdown.org>"
   :licence "MIT"
   :depends-on (:cl-irc
-	       :cl+ssl
-	       :lisp-unit
-	       :split-sequence
-	       :cl-json
-	       :drakma
-	       :cl-csv)
+               :cl+ssl
+               :lisp-unit
+               :split-sequence
+               :cl-json
+               :drakma
+               :cl-csv)
   :serial t
   :components ((:file "nilbot")
-	       (:file "commands")
-	       (:file "nilbot-tests")))
+               (:file "commands")
+               (:file "nilbot-tests")))

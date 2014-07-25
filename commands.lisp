@@ -17,8 +17,8 @@
 (defun command-run (source args)
   (let ((sym (gethash (string-upcase (car args)) *commands*)))
     (if sym
-      (funcall sym source args)
-      "")))
+        (funcall sym source args)
+        "")))
 
 (defun dirty-chars (c)
   (case c
@@ -27,7 +27,7 @@
 
 (defun handle-message (source text)
   (let* ((clean-string (remove-if #'dirty-chars text))
-	 (split (split-by-one-space clean-string))
+         (split (split-by-one-space clean-string))
          (args (command-trim split)))
     (if args
         (command-run source args)
@@ -93,9 +93,9 @@
   (let ((result nil))
     (dolist (match matches result)
       (let ((home (get-result-from-team (cdr (assoc :home--team match))))
-	    (away (get-result-from-team (cdr (assoc :away--team match)))))
-	(push (format nil "~A ~A x ~A ~A" (car home) (cdr home) (cdr away) (car away))
-	      result)))))
+            (away (get-result-from-team (cdr (assoc :away--team match)))))
+        (push (format nil "~A ~A x ~A ~A" (car home) (cdr home) (cdr away) (car away))
+              result)))))
 
 (defun worldcup-today-to-json ()
   (json:decode-json-from-string
@@ -103,7 +103,7 @@
 
 (defcommand !worldcup (source args)
   (declare (ignorable source args))
-    (format nil "today's results: ~{~A~^, ~}" (get-matches-results (worldcup-today-to-json))))
+  (format nil "today's results: ~{~A~^, ~}" (get-matches-results (worldcup-today-to-json))))
 
 (defcommand !copa (source args)
   (declare (ignorable source args))
@@ -113,32 +113,32 @@
   (let ((request (format nil "http://finance.google.com/finance/info?client=ig\&q=~A:~A" code secode)))
     (let ((body (drakma:http-request request)))
       (if (= (length body) 0)
-	  nil
-	  (subseq body 5 (- (length body) 2))))))
+          nil
+          (subseq body 5 (- (length body) 2))))))
 
 (defun results-from-quote (quote)
   (let ((json (json:decode-json-from-string quote)))
     (values (cdr (assoc :l--cur json)) (cdr (assoc :c json)) (cdr (assoc :cp json)))))
 
 (defun stock-exchange (args secode)
-    (let* ((code (string-upcase (second args)))
-      (result (stock-exchange-quote secode code)))
-	(if (null result)
-            (format nil "Invalid ~A code (~A)" secode code)
-	    (multiple-value-bind (cur c cp) (results-from-quote (stock-exchange-quote secode code))
-	    (format nil "~A:~A ~A ~A (~A%)" secode code cur c cp)))))
+  (let* ((code (string-upcase (second args)))
+         (result (stock-exchange-quote secode code)))
+    (if (null result)
+        (format nil "Invalid ~A code (~A)" secode code)
+        (multiple-value-bind (cur c cp) (results-from-quote (stock-exchange-quote secode code))
+          (format nil "~A:~A ~A ~A (~A%)" secode code cur c cp)))))
 
 
 (defcommand !nasdaq (source args)
   (declare (ignorable source))
   (if (> (length args) 1)
-    (stock-exchange args "NASDAQ")
+      (stock-exchange args "NASDAQ")
       "Usage: !nasdaq <code>"))
 
 (defcommand !bovespa (source args)
   (declare (ignorable source))
   (if (> (length args) 1)
-    (stock-exchange args "BVMF")
+      (stock-exchange args "BVMF")
       "Usage: !bovespa <code>"))
 
 (defcommand !intc (source args)
@@ -155,17 +155,17 @@
   (if (null *dictionary*)
       nil
       (loop for elem in *dictionary* do
-	   (when (and (= (length elem) 3)
-		      (string-equal (string-upcase str) (string-upcase (first elem))))
-	     (return (if short
-			 (second elem)
-			 (third elem)))))))
+           (when (and (= (length elem) 3)
+                      (string-equal (string-upcase str) (string-upcase (first elem))))
+             (return (if short
+                         (second elem)
+                         (third elem)))))))
 
 (defun print-definition (what short)
   (let ((result (find-intel-definition what short)))
     (if (null result)
-	(format nil "~A not found" what)
-	(format nil "~A: ~A" what result))))
+        (format nil "~A not found" what)
+        (format nil "~A: ~A" what result))))
 
 (defcommand !wtf (source args)
   (declare (ignorable source))
@@ -181,8 +181,8 @@
 
 (defun fortune-to-string ()
   (let* ((buf (make-string 512))
-	 (end (read-sequence buf (sb-ext:process-output
-				  (sb-ext:run-program "/usr/bin/fortune" '("-a" "-s") :output :stream)))))
+         (end (read-sequence buf (sb-ext:process-output
+                                  (sb-ext:run-program "/usr/bin/fortune" '("-a" "-s") :output :stream)))))
     (subseq buf 0 (- end 1))))
 
 (defcommand !fortune (source args)
