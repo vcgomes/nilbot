@@ -141,6 +141,12 @@
       (stock-exchange args "BVMF")
       "Usage: !bovespa <code>"))
 
+(defcommand !nyse (source args)
+  (declare (ignorable source))
+  (if (> (length args) 1)
+      (stock-exchange args "NYSE")
+      "Usage: !nyse <code>"))
+
 (defcommand !intc (source args)
   (declare (ignorable source args))
   (let ((code "INTC")
