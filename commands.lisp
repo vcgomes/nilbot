@@ -118,7 +118,7 @@
 
 (defun results-from-quote (quote)
   (let ((json (json:decode-json-from-string quote)))
-    (values (cdr (assoc :l--cur json)) (cdr (assoc :c json)) (cdr (assoc :cp json)))))
+    (values (cdr (assoc :l--cur json)) (cdr (assoc :c json)) (cdr (assoc :cp json)) (cdr (assoc :l json)))))
 
 (defun stock-exchange (args secode)
   (let* ((code (string-upcase (second args)))
