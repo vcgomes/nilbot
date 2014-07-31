@@ -154,6 +154,11 @@
     (multiple-value-bind (cur c cp) (results-from-quote (stock-exchange-quote secode code))
       (format nil "NASDAQ:~A ~A ~A (~A%)" code cur c cp))))
 
+(defcommand !usd (source args)
+  (declare (ignorable source args))
+  (multiple-value-bind (cur c cp l) (results-from-quote (stock-exchange-quote "USDBRL" "CURRENCY"))
+    (format nil "R$~A ~A (~A%)" l c cp)))
+
 (defun load-dictionary ()
   (setf *dictionary* (cl-csv:read-csv (open "dictionary.csv"))))
 
