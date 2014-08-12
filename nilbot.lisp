@@ -13,11 +13,12 @@
 (defun privmsg-hook (message)
   (let ((sender (first (irc:arguments message)))
         (text (second (irc:arguments message))))
-    (let ((respond-to (if (string-equal sender *botname*)
+    (let* ((respond-to (if (string-equal sender *botname*)
                           (irc:source message)
-                          sender)))
-      (irc:privmsg (irc:connection message) respond-to
-                   (handle-message (irc:source message) text)))))
+                          sender))
+           (result-lines (handle-message (irc:source message) text)))
+      (dolist (line result-lines)
+        (irc:privmsg (irc:connection message) respond-to line)))))
 
 (defun start-process (function)
   "Internal helper for the DEPRECATED function

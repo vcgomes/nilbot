@@ -25,13 +25,16 @@
     ((#\\ #\") t)
     (otherwise nil)))
 
+(defun split-new-lines (text)
+  (split-sequence:split-sequence #\Newline text :remove-empty-subseqs t))
+
 (defun handle-message (source text)
   (let* ((clean-string (remove-if #'dirty-chars text))
          (split (split-by-one-space clean-string))
          (args (command-trim split)))
-    (if args
-        (command-run source args)
-        "")))
+    (split-new-lines (if args
+                         (command-run source args)
+                         ""))))
 
 (defun split-by-one-space (string)
   (split-sequence:split-sequence #\Space string :remove-empty-subseqs t))
