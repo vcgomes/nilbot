@@ -173,7 +173,7 @@
                          (third elem)))))))
 
 (defun print-definition (what short)
-  (let ((result (find-intel-definition what short)))
+  (let ((result (lookup-definition what short)))
     (if (null result)
         (format nil "~A not found" what)
         (format nil "~A: ~A" what result))))
