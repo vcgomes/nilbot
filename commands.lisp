@@ -61,7 +61,7 @@
 (defun theme-at-s-u (day-of-week)
   (case day-of-week
     ((5 6) "closed?")
-    (0 "no theme")
+    (0 "massa show")
     (1 "arabian")
     (2 "feijoada")
     (3 "asian")
