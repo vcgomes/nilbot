@@ -202,3 +202,7 @@
 (defcommand !fortune (source args)
   (declare (ignorable source args))
   (fortune-to-string))
+
+(defcommand !dealwithit (source args)
+  (declare (ignorable source args))
+  (format nil "(•_•)~%( •_•)>⌐■-■~%(⌐■_■) DEAL WITH IT!"))
