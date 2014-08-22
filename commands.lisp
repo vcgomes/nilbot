@@ -5,6 +5,7 @@
 
 (defvar *commands* (make-hash-table :test #'equal))
 (defvar *dictionary* nil)
+(defvar *cortex* (make-hash-table :test #'equal))
 
 (defun command-p (string)
   (and (stringp string) (eql (char string 0) #\!)))
@@ -162,18 +163,44 @@
   (multiple-value-bind (cur c cp l) (results-from-quote (stock-exchange-quote "USDBRL" "CURRENCY"))
     (format nil "R$~A ~A (~A%)" l c cp)))
 
+(defun by-length (a b)
+  (< (length a) (length b)))
+
+(defun insert-defs-in-cortex (key defs)
+  (let* ((value (gethash (string-downcase key) *cortex*))
+         (sorted (sort (append value defs) #'by-length)))
+    (setf (gethash (string-downcase key) *cortex*) (mapcar #'trim-space sorted))))
+
 (defun load-dictionary ()
-  (setf *dictionary* (cl-csv:read-csv (open "dictionary.csv"))))
+  (with-open-file (stream "dictionary.csv")
+    (let ((dict (cl-csv:read-csv stream)))
+      (dolist (elem dict)
+        (let ((key (car elem))
+              (defs (cdr elem)))
+          (insert-defs-in-cortex key defs))))))
+
+(defun trim-space (str)
+  (string-trim '(#\Space #\Tab) str))
+
+(defun load-definitions ()
+  (with-open-file (stream "definitions.txt")
+    (do ((line (read-line stream nil)
+               (read-line stream nil)))
+        ((null line))
+      (let* ((s (split-sequence:split-sequence #\- line :count 2 :remove-empty-subseqs t))
+             (key (trim-space (car s)))
+             (value (cdr s)))
+        (insert-defs-in-cortex key value)))))
+
+(defun last-element (list)
+  (nth (- (length list) 1) list))
 
 (defun lookup-definition (str &optional (short t))
-  (if (null *dictionary*)
-      nil
-      (loop for elem in *dictionary* do
-           (when (and (= (length elem) 3)
-                      (string-equal (string-upcase str) (string-upcase (first elem))))
-             (return (if short
-                         (second elem)
-                         (third elem)))))))
+  (let ((defs (gethash (string-downcase str) *cortex*)))
+    (when defs
+      (if short
+          (first defs)
+          (last-element defs)))))
 
 (defun print-definition (what short)
   (let ((result (lookup-definition what short)))
