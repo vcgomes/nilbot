@@ -233,3 +233,21 @@
 (defcommand !dealwithit (source args)
   (declare (ignorable source args))
   (format nil "(•_•)~%( •_•)>⌐■-■~%(⌐■_■) DEAL WITH IT!"))
+
+(defun urbandictionary (word)
+  (let ((request
+         (format nil "http://api.urbandictionary.com/v0/define?term=~A" (string-downcase word))))
+    (let ((body (drakma:http-request request)))
+      (unless (= (length body) 0)
+        (json:decode-json-from-string body)))))
+
+(defun first-ud-definition (json)
+  (cdr (assoc :definition (first (cdr (assoc :list json))))))
+
+(defcommand !urban (source args)
+  (declare (ignorable source))
+  (if (< (length args) 2)
+      "Usage: !urban <string>"
+      (let ((result (urbandictionary (second args))))
+        (when result
+          (first-ud-definition result)))))
