@@ -248,6 +248,7 @@
   (declare (ignorable source))
   (if (< (length args) 2)
       "Usage: !urban <string>"
-      (let ((result (urbandictionary (second args))))
-        (when result
-          (first-ud-definition result)))))
+      (let ((result (first-ud-definition (urbandictionary (second args)))))
+        (if result
+            result
+            (format nil "~A: not found" (second args))))))
