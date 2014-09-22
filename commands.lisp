@@ -1,7 +1,11 @@
 (in-package #:nilbot)
 
 (setf drakma:*header-stream* nil)
+(setf drakma:*text-content-types* nil)
 (push '("application" . "json") drakma:*text-content-types*)
+(push '("application" . "x-javascript") drakma:*text-content-types*)
+(push '("text" . "html") drakma:*text-content-types*)
+
 
 (defvar *commands* (make-hash-table :test #'equal))
 (defvar *dictionary* nil)
@@ -249,6 +253,25 @@
   (if (< (length args) 2)
       "Usage: !urban <string>"
       (let ((result (first-ud-definition (urbandictionary (second args)))))
+        (if result
+            result
+            (format nil "~A: not found" (second args))))))
+
+(defun duckduckgo (word) 
+  (let ((request
+         (format nil "http://api.duckduckgo.com/?q=~A&format=json" (string-downcase word))))
+    (let ((body (drakma:http-request request)))
+      (unless (= (length body) 0)
+        (json:decode-json-from-string body)))))
+
+(defun first-ddg-result (json)
+  (cdr (assoc :*text (first (cdr (assoc :*related-topics json))))))
+
+(defcommand !ddg (source args)
+  (declare (ignorable source))
+  (if (< (length args) 2)
+      "Usage: !ddg <string>"
+      (let ((result (first-ddg-result (duckduckgo (second args)))))
         (if result
             result
             (format nil "~A: not found" (second args))))))
